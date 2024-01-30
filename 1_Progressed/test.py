@@ -1,4 +1,0 @@
-import sys
-
-score = "A+"
-
