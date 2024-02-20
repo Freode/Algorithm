@@ -25,22 +25,28 @@ int main()
     vector<int> outputs;
     int next = -1;
     int counts = 0;
+
+    // 요세푸스 순열
     for(int i = 0; i < n; i++)
     {
         counts = 0;
+        // 다음 순서 번호 찾기
         while(counts != k)
         {
             next++;
+            // 범위를 벗어났을 경우, 처음으로 이동
             if(next == n)
             {
                 next = 0;
             }
+            // 아직 방문하지 않은 경우, 순서 증가
             if(inputs[next] != 0)
             {
                 counts++;
             }
         }
 
+        // 다음으로 방문해야할 곳에 방문
         outputs.push_back(inputs[next]);
         inputs[next] = 0;
     }
