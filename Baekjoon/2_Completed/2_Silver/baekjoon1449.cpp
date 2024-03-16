@@ -26,16 +26,15 @@ int main()
 
     int count = 0;
     int current_loc = -10000;
+
+    // 테이프 붙인 위치와 테이프 길이를 비교
+    // 연속으로 붙일 수 있는 경우에는 무시
     for(int i = 0; i < N; i++)
     {
         if(current_loc + L - 1 < loc[i])
         {
             current_loc = loc[i]; 
             count++;
-        }
-        else
-        {
-            
         }
     }
 
