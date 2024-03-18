@@ -36,7 +36,6 @@ int main()
     {
         before_sum += each;
         total += before_sum;
-        cout << total << "\n";
     }
 
     // 출력문
