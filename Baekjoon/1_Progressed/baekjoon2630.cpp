@@ -149,7 +149,7 @@ int main()
     }
     else
     {
-            // 구역 확인
+        // 구역 확인
         CheckMap(area, N, square);
 
         // 구역 출력
