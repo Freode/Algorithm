@@ -26,7 +26,7 @@ struct Location
     Location(int _y, int _x){ y = _y; x = _x; }
 };
 
-int Simulate(vector<vector<Info>> &maps, vector<Location> &selection_virus, vector<Location> &direction, int N);
+int Simulate(vector<vector<Info>> &maps, vector<Location> &selection_virus, int N);
 
 // 맵 입력
 void InputMap(vector<vector<Info>> &maps, int N)
@@ -41,7 +41,7 @@ void InputMap(vector<vector<Info>> &maps, int N)
 }
 
 // 바이러스 위치 선택
-int SelectVirus(vector<vector<Info>> &map, vector<Location> &virus_locs, vector<Location> &selection_virus, vector<Location> &direction, int N, int current_idx ,int layer)
+int SelectVirus(vector<vector<Info>> &map, vector<Location> &virus_locs, vector<Location> &selection_virus, int N, int current_idx ,int layer)
 {
     int min_time = 10000;
     int temp_time = 0;
@@ -49,7 +49,7 @@ int SelectVirus(vector<vector<Info>> &map, vector<Location> &virus_locs, vector<
     // 마지막 바이러스 위치까지 선정 완료
     if(layer == 0)
     {
-        return Simulate(map, selection_virus, direction, N);
+        return Simulate(map, selection_virus, N);
     }
     else
     {
@@ -57,8 +57,9 @@ int SelectVirus(vector<vector<Info>> &map, vector<Location> &virus_locs, vector<
         {
 
             selection_virus.push_back(virus_locs[i]);
-            temp_time = SelectVirus(map, virus_locs, selection_virus, direction, N, i, layer - 1);
-            if((int)selection_virus.size() > 0){ selection_virus.erase(selection_virus.end()); }
+            temp_time = SelectVirus(map, virus_locs, selection_virus, N, i, layer - 1);
+            // selection_virus.erase(selection_virus.end()) 로 하니깐 잘못된 메모리 접근으로 인한 오류 발생
+            if((int)selection_virus.size() > 0){ selection_virus.pop_back(); }
 
             if(temp_time != -1 && temp_time < min_time)
             {
@@ -75,17 +76,6 @@ int AllVirusSimulate(vector<vector<Info>> &map, int N, int M)
     // 바이러스 놓을 수 있는 위치 모두 찾기
     vector<Location> virus_locs;
     vector<Location> selection_virus;
-    // 방향 
-    vector<Location> direction;
-    // 상
-    direction.push_back(Location(-1,0));
-    // 하
-    direction.push_back(Location(1,0));
-    // 좌
-    direction.push_back(Location(0,-1));
-    // 우
-    direction.push_back(Location(0,1));
-
     for(int i = 0; i < N; i++)
     {
         for(int j = 0; j < N; j++)
@@ -93,7 +83,7 @@ int AllVirusSimulate(vector<vector<Info>> &map, int N, int M)
             if(map[i][j].state == 2) { virus_locs.push_back(Location(i,j)); }
         }
     }
-    int min_time = SelectVirus(map, virus_locs, selection_virus, direction, N, -1, M);
+    int min_time = SelectVirus(map, virus_locs, selection_virus, N, -1, M);
 
     if(min_time == 10000) { return -1; }
     else { return min_time; }
@@ -153,9 +143,8 @@ int MaxSperadVirusTime(vector<vector<Info>> &maps, int N)
 }
 
 // 시뮬레이션 시작
-int Simulate(vector<vector<Info>> &maps, vector<Location> &selection_virus, vector<Location> &direction, int N)
+int Simulate(vector<vector<Info>> &maps, vector<Location> &selection_virus, int N)
 {
-    // 여기서 뒤에서 터짐.
     InitMap(maps, N);
 
     // 바이러스 시작 위치 넣기
@@ -167,11 +156,22 @@ int Simulate(vector<vector<Info>> &maps, vector<Location> &selection_virus, vect
         maps[select.y][select.x].b_is_visited = true;
     }
 
+    // 방향 
+    vector<Location> direct(4);
+    // 상
+    direct.push_back(Location(-1,0));
+    // 하
+    direct.push_back(Location(1,0));
+    // 좌
+    direct.push_back(Location(0,-1));
+    // 우
+    direct.push_back(Location(0,1));
+
     Location cur_check_loc;
     // BFS 시작
     while(loc_queue.empty() == false)
     {
-        for(Location& dir : direction)
+        for(Location& dir : direct)
         {
             cur_check_loc = loc_queue.front();
             cur_check_loc.y += dir.y;
