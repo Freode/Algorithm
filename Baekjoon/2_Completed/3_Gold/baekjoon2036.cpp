@@ -22,8 +22,8 @@ int main()
     int n;
     cin >> n;
 
-    vector<int> plus_num;
-    vector<int> minus_num;
+    vector<long long> plus_num;
+    vector<long long> minus_num;
     long long result = 0;
 
     int temp;
