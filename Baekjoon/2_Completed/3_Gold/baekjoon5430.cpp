@@ -1,4 +1,4 @@
-// 골드 5 - 5430번 : 트리 순회
+// 골드 5 - 5430번 : AC
 // 작성자 : free4760(jeonghoe22)
 
 #include <iostream>
