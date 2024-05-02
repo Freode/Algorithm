@@ -36,8 +36,6 @@ int main()
     int last_location, count, result = 0;
     while(left <= right)
     {
-        cout << "left : " << left << ", right : " << right << "\n";
-
         pivot = (left + right) / 2;
 
         // 처음에는 반드시 설치
@@ -64,13 +62,12 @@ int main()
         // 공유기 개수가 조건보다 더 적을 때, 최소 거리를 줄임
         else if(count < C){ right = pivot - 1;}
         // 공유기 개수가 현재 조건을 만족할 때, 거리를 저장하고 다음 검사 진행
+        // 최소 거리가 더 클 때, 해결할 수도 있으니깐
         else
         {
             result = pivot;
             left = pivot + 1;
         }
-
-        cout << "pivot : " << pivot << ", count : " << count << "\n";
     }
 
     // 출력
