@@ -19,7 +19,7 @@ int solution(int n) {
 
     vector<int> cases(1, 0);
 
-    for(int i = 1; i < n; i++)
+    for(int i = 1; i <= n; i++)
     {
         if(i == 1)
         { 

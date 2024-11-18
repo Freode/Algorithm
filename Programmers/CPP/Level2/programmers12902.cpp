@@ -35,8 +35,9 @@ int solution(int n) {
     // f(0) = 1로 가정
     // f(n) = f(n-2) * f(2) + 0부터 n-4까지 Sigma(f(k) * 2)
 
-    vector<int> cases(1, 0);
-    vector<int> acc_2(1, 0);
+    vector<long long> cases(1, 0);
+    // Sigma 부분의 누적합을 미리 계산
+    vector<long long> acc_2(1, 0);
     for(int i = 1; i <= n; i++)
     {
         // 홀수인 경우
@@ -45,16 +46,22 @@ int solution(int n) {
             cases.push_back(0);
             acc_2.push_back(0);
         }
+        // 2인 경우
         else if(i == 2)
         {
             cases.push_back(3);
-            acc_2.push_back(0);
+            acc_2.push_back(2);
         }
+        // 2가 아닌 짝수
         else
         {
+            // f(n-2) * 3을 먼저 추가
             cases.push_back((cases[i-2] * 3) % MOD);
+            // f(n-4)부터 f(2)까지의 2를 곱한 누적합 더하기
             acc_2.push_back(((cases[i-4]*2) % MOD + acc_2[i-2]) % MOD);
+            // 누적합을 새롭게 추가
             cases[i] += acc_2[i];
+            // 나머지 연산
             cases[i] %= MOD;
         }
     }
