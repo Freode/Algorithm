@@ -5,6 +5,7 @@
 #include <vector>
 #include <utility>
 #include <queue>
+#include <iostream>
 
 using namespace std;
 
@@ -31,6 +32,11 @@ struct Polygon
 // 도형 확인 함수
 void check_polygon(vector<vector<int>> &table, vector<Polygon> &polygons, vector<vector<bool>> &table_visit,int y, int x)
 {
+    // 벽이거나 이미 방문한 경우 바로 반환
+    if(table[y][x] == 0 || table_visit[y][x])
+    {
+        return;
+    }
     table_visit[y][x] = true;
     
     int size = 1;
@@ -52,8 +58,8 @@ void check_polygon(vector<vector<int>> &table, vector<Polygon> &polygons, vector
         // 4방향 검사
         for(int i = 0; i < 4; i++)
         {
-            temp_y = y;
-            temp_x = x;
+            temp_y = cur_loc.first;
+            temp_x = cur_loc.second;
 
             if(i == 0)
             {
@@ -87,13 +93,13 @@ void check_polygon(vector<vector<int>> &table, vector<Polygon> &polygons, vector
             // 추가
             que_loc.push(make_pair(temp_y, temp_x));
             size++;
-            shape.push_back(make_pair(cur_loc.first - y, cur_loc.second -x));
-            table_visit[cur_loc.first][cur_loc.second] = true;
+            shape.push_back(make_pair(temp_y - y, temp_x -x));
+            table_visit[temp_y][temp_x] = true;
         }
 
         que_loc.pop();
     }
-
+    
     polygons.push_back(Polygon(size));
     polygons[polygons.size() - 1].shapes.push_back(shape);
 }
@@ -110,12 +116,12 @@ void turn_polygon(vector<Polygon> &polygons)
             // 초기화 및 중심점 추가
             shape.clear();
             shape.push_back(make_pair(0, 0));
-
+            
             //
-            for(int j = 1; i < polygon.shapes[0].size(); j++)
+            for(int j = 1; j < polygon.shapes[0].size(); j++)
             {
-                temp_x = polygon.shapes[0][j].second;
-                temp_y = polygon.shapes[0][j].first;
+                temp_x = polygon.shapes[i][j].second;
+                temp_y = polygon.shapes[i][j].first;
 
                 // 교환
                 temp = temp_x;
@@ -135,8 +141,14 @@ void turn_polygon(vector<Polygon> &polygons)
 
 int input_polygon(vector<vector<int>> &game_board, vector<Polygon> &polygons, vector<vector<bool>> &game_board_visits, int y, int x)
 {
+    // 벽이거나 이미 방문했으면 반환
+    if(game_board[y][x] == 1 || game_board_visits[y][x])
+    {
+        return 0;
+    }
+    
     int count;
-
+    
     queue<pair<int, int>> que_loc;
     que_loc.push(make_pair(y, x));
     game_board_visits[y][x] = true;
@@ -180,7 +192,7 @@ int input_polygon(vector<vector<int>> &game_board, vector<Polygon> &polygons, ve
             }
 
             // 방문 여부 및 벽인지 확인
-            if(game_board_visits[temp_y][temp_x] || !game_board[temp_y][temp_x])
+            if(game_board_visits[temp_y][temp_x] || game_board[temp_y][temp_x])
             {
                 continue;
             }
@@ -192,14 +204,20 @@ int input_polygon(vector<vector<int>> &game_board, vector<Polygon> &polygons, ve
         }
 
         que_loc.pop();
-
+    }
+    
+    cout << "Board" << endl;
+    for(int i = 0; i < shapes.size(); i++)
+    {
+        cout << shapes[i].first << ", " << shapes[i].second << endl;
     }
 
     // 도형 크기와 모양 검사
     bool b_is_same = true;
+    int check_y, check_x;
     for(Polygon& polygon : polygons)
     {
-        if(polygon.b_is_used || !(polygon.size == size))
+        if(polygon.b_is_used || polygon.size != size)
         {
             continue;
         }
@@ -208,33 +226,43 @@ int input_polygon(vector<vector<int>> &game_board, vector<Polygon> &polygons, ve
         for(int i = 0; i < 4; i++)
         {
             b_is_same = true;
-            for(int j = 0; j < polygon.shapes[0].size() j++)
+            for(int j = 0; j < polygon.shapes[0].size(); j++)
             {
-                if(polygon.shapes[i][j].first != shapes[j].first || polygon.shapes[i][j].second != shapes[j].second)
+                check_y = y + polygon.shapes[i][j].first;
+                check_x = x + polygon.shapes[i][j].second;
+                if(!(check_y >= 0 && check_x >= 0 && check_y < game_board.size() && check_x < game_board.size()))
+                {
+                    b_is_same = false;
+                    break;
+                }
+                
+                if(game_board[y + polygon.shapes[i][j].first][x + polygon.shapes[i][j].second] == 1)
                 {
                     b_is_same = false;
                     break;
                 }
             }
-
-            if(!b_is_same)
-            {
-                break;
-            }
             // 맞는 도형 찾음
-            else
+            if(b_is_same)
             {
                 polygon.b_is_used = true;
                 return size;
             }
         }
     }
-
+    
+    // 맞는 도형을 찾지 못한 경우
+    // 중심점이 다를 수 있으므로 방문 초기화
+    for(int i = 0; i < shapes.size(); i++)
+    {
+        game_board_visits[y + shapes[i].first][x + shapes[i].second] = false;
+    }
+    
     return 0;
 }
 
 int solution(vector<vector<int>> game_board, vector<vector<int>> table) {
-    int answer = -1;
+    int answer = 0;
 
     // 도형 정보 입력
     vector<Polygon> polygons;
@@ -248,7 +276,9 @@ int solution(vector<vector<int>> game_board, vector<vector<int>> table) {
             check_polygon(table, polygons, table_visit, i, j);
         }
     }
-
+    // 도형 회전
+    turn_polygon(polygons);
+    
     vector<vector<bool>> game_board_visits(table.size(), vector<bool>(table.size(), false));
     // 도형 대입
     for(int i = 0; i < game_board.size(); i++)
@@ -258,6 +288,6 @@ int solution(vector<vector<int>> game_board, vector<vector<int>> table) {
             answer += input_polygon(game_board, polygons, game_board_visits, i, j);
         }
     }
-
+    
     return answer;
 }
