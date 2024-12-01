@@ -29,9 +29,21 @@ https://programmers.co.kr/users/challenge-activity
    - Silver : 123문제
    - Gold : 42문제
 
+
      
 2. 프로그래머스 : 56문제
    - Level 1 : 3문제
    - Level 2 : 33문제
    - Level 3 : 16문제
    - Level 4 : 4문제
+
+
+
+## 폴더
+
+1. Baekjoon
+   - 백준 웹사이트에서 해결하거나 풀고 있는 문제 코드 모음
+  
+
+2. Programmers
+   - 프로그래머스 웹사이트에서 해결하거나 풀고 있는 문제 코드 모음
