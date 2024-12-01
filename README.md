@@ -24,8 +24,8 @@ https://programmers.co.kr/users/challenge-activity
 
 ## 해결한 문제 개수
 
-1. 백준 : 254문제 165
-   - Bronze : 89문제
+1. 백준 : 248문제
+   - Bronze : 83문제
    - Silver : 123문제
    - Gold : 42문제
 
