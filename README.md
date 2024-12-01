@@ -10,11 +10,11 @@ A collection of algorithmic problems that have been solved or are being solved.
 
 1. 백준
 https://solved.ac/profile/free4760 
-
+![백준 프로필 사진](https://github.com/Freode/Algorithm/blob/main/%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98_%ED%94%84%EB%A1%9C%ED%95%84__1.png)
 
 2. 프로그래머스
 https://programmers.co.kr/users/challenge-activity
-
+![프로그래머스 프로필 사진](https://github.com/Freode/Algorithm/blob/main/%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98_%ED%94%84%EB%A1%9C%ED%95%84__2.png)
 
 ## 해결한 문제 개수
 
