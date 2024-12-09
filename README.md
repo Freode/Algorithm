@@ -12,7 +12,7 @@ A collection of algorithmic problems that have been solved or are being solved.
 https://solved.ac/profile/free4760
 
 
-![백준 프로필 사진](https://github.com/Freode/Algorithm/blob/main/%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98_%ED%94%84%EB%A1%9C%ED%95%84__2.png)
+![백준 프로필 사진](https://github.com/Freode/Algorithm/blob/main/%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98_%ED%94%84%EB%A1%9C%ED%95%84__2.png){: width="200" height = "200"}
 
 
 3. 프로그래머스
