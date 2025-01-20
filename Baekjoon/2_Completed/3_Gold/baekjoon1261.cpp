@@ -5,8 +5,6 @@
 #include <vector>
 #include <string>
 #include <queue>
-#include <algorithm>
-#include <utility>
 
 using namespace std;
 
@@ -112,13 +110,4 @@ int main()
     }
 
     cout << result << "\n";
-
-    for(int i = 0; i < n; i++)
-    {
-        for(int j = 0; j < m; j++)
-        {
-            cout << areas[i][j].cases << " ";
-        }
-        cout << "\n";
-    }
 }
