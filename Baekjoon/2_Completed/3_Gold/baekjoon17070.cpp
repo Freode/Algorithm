@@ -43,7 +43,10 @@ void simulation(vector<vector<Area>> &areas)
             // 0번째 줄
             if(i == 0)
             {
-                areas[i][j].cases_left = areas[i][j-1].b_is_wall ? 0 : 1;
+                if(j != 1 && areas[i][j].b_is_wall == false)
+                {
+                    areas[i][j].cases_left = areas[i][j-1].cases_left;
+                }
                 continue;
             }
 
