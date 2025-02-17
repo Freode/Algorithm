@@ -57,8 +57,8 @@ int main()
         // 합이 0일 경우, 같은 값을 가진게 몇 개인지 확인할 필요
         if(sum == 0)
         {
-            int ab_count = 1;
-            int cd_count = 1;
+            ll ab_count = 1;
+            ll cd_count = 1;
 
             int next_ab_loc = ab_loc + 1;
             int next_cd_loc = cd_loc - 1;
