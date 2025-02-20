@@ -7,7 +7,6 @@
 
 using namespace std;
 
-
 int main()
 {
     // 입출력 최적화
@@ -37,6 +36,7 @@ int main()
         {
             tastrahedrons.push_back(new_tastrahedron);
         }
+        // 30만 개 이상은 필요 없으므로 무시
         else
         {
             b_continue = false;
@@ -45,22 +45,27 @@ int main()
 
     // 사면체 개수 제작
     int result = 300000;
-    // 사면체 가능 경우를 하나씩 줄이기
-    for(int j = tastrahedrons.size()-1; j >= 0; j--)
+    vector<int> cases(N+1);
+
+    // 1개짜리만 사용할 때, 사면체 개수 넣기
+    for(int i = 0; i < N+1; i++)
     {
-        int count = 0;
-        int bullets = N;
-        // 가능한 사면체별로 순환
-        for(int i = j; i >= 0; i--)
+        cases[i] = i;
+    }
+
+    // 목표 대포알 개수까지 반복
+    for(int i = 1; i < N+1; i++)
+    {
+        // 사면체 수량만큼 반복
+        for(const int& tastrahedron : tastrahedrons)
         {
-            int each_count = bullets / tastrahedrons[i];
-
-            count += each_count;
-            bullets -= each_count * tastrahedrons[i];
+            // 사면체 개수가 유효 대포알보다 많은 경우도 무시
+            if(tastrahedron > i) break;
+            // 현재 목표 개수에서 사면체를 사용하는 경우가 더 나은 경우
+            // 1개를 추가하는 이유 : 여러 개를 사용할 때는 이미 더 작은 사면체로 갱신됨
+            cases[i] = min(cases[i], cases[i-tastrahedron] + 1);
         }
-        // 사면체를 제작할 수 있을 때, 최솟값 구하기
-        if(count != 0) result = min(result, count);
-    }   
+    }
 
-    cout << result << "\n";
+    cout << cases[N] << "\n";
 }
