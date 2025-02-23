@@ -73,6 +73,10 @@ void CheckCases(vector<Money> &in_dp, const vector<int> &in_costs, const int in_
                             is_changed = true;
                             break;
                         }
+                        else if(cur_best.cases[i] > cost_check.cases[i])
+                        {
+                            break;
+                        }
                     }
                 }
             }
