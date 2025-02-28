@@ -9,21 +9,8 @@
 
 using namespace std;
 
-struct Info
-{
-    int y = 0;
-    int x = 0;
-    Info() = default;
-    Info(int y, int x) : y(y), x(x) {}
-
-    bool operator==(const Info& other) const
-    {
-        return y == other.y && x == other.x;
-    }
-};
-
 // 도미노 번호 저장소
-unordered_map<Info, int> num_db;
+unordered_map<string, int> num_db;
 
 // 이동 방향
 int dy[] = {1, 0};
@@ -33,6 +20,12 @@ int dx[] = {0, 1};
 const int len_y = 8;
 const int len_x = 7;
 
+// 입력 숫자를 문자열로 만들어서 반환
+string NumToString(int i, int j)
+{
+    return to_string(i) + to_string(j);
+}
+
 // 배열에서 사용할 숫자 정보를 미리 저장 
 int SaveNumbers()
 {
@@ -41,7 +34,8 @@ int SaveNumbers()
     {
         for(int j = i; j <= 6; j++)
         {
-            num_db[Info(i, j)] = count;
+            string num = NumToString(i,j);
+            num_db[num] = count;
             count++;
         }
     }
@@ -51,22 +45,24 @@ int SaveNumbers()
 // 맵 입력
 void InputMap(vector<vector<int>> &in_maps)
 {
-    for(int i = 0; i < in_maps.size(); i++)
+    string input;
+    for(int i = 0; i < len_y; i++)
     {
-        for(int j = 0; j < in_maps[0].size(); j++)
+        cin >> input;
+        for(int j = 0; j < len_x; j++)
         {
-            cin >> in_maps[i][j];
+            in_maps[i][j] = input[j] - '0';
         }
     }
 }
 
-int FindDomino(Info &in_nums)
+int FindDomino(string &in_nums)
 {
     return num_db[in_nums];
 }
 
 // 현재 도미노를 사용할 수 있는지 확인
-bool CanUse(Info &in_nums, vector<bool> &in_use)
+bool CanUse(string &in_nums, vector<bool> &in_use)
 {
     return static_cast<bool>(in_use[FindDomino(in_nums)]) == false;
 }
@@ -84,7 +80,7 @@ bool IsInBoard(const int &y, const int &x)
 }
 
 // 탐색
-int Search(vector<vector<int>>& in_maps, vector<vector<bool>> in_visits, vector<bool> in_use, int y, int x)
+int Search(vector<vector<int>>& in_maps, vector<vector<bool>>& in_visits, vector<bool>& in_use, int y, int x)
 {
     int result = 0;
     int next_y = y, next_x = x;
@@ -95,8 +91,7 @@ int Search(vector<vector<int>>& in_maps, vector<vector<bool>> in_visits, vector<
     // 오른쪽 끝에 도달하는 경우, 다음 줄의 첫 번째로 이동
     if(x == len_x)
     {
-        next_y = y + 1;
-        next_x = 0;
+        return Search(in_maps, in_visits, in_use, next_y + 1, 0);
     }
 
     // 현재 점을 방문 했는지 확인
@@ -114,17 +109,20 @@ int Search(vector<vector<int>>& in_maps, vector<vector<bool>> in_visits, vector<
 
         // 범위 안일 때만 진행
         if(IsInBoard(check_y, check_x) == false) continue;
+        // 이미 방문한 곳이면, 무시
+        if(IsVisit(in_visits, check_y, check_x)) continue;
 
         // 사용한 도미노인지 확인
         int domino_s = min(in_maps[next_y][next_x], in_maps[check_y][check_x]);
         int domino_l = max(in_maps[next_y][next_x], in_maps[check_y][check_x]);
         
-        Info domino = Info(domino_s, domino_l);
+        string domino = NumToString(domino_s, domino_l);
         if(CanUse(domino, in_use))
         {
             // 해당 도미노 사용
             in_use[FindDomino(domino)] = true;
             in_visits[check_y][check_x] = true;
+            in_visits[next_y][next_x] = true;
 
             // 옆으로 이동
             result += Search(in_maps, in_visits, in_use, y, x+1);
@@ -132,6 +130,7 @@ int Search(vector<vector<int>>& in_maps, vector<vector<bool>> in_visits, vector<
             // 다시 초기화
             in_use[FindDomino(domino)] = false;
             in_visits[check_y][check_x] = false;
+            in_visits[next_y][next_x] = false;
         }
     }
 
