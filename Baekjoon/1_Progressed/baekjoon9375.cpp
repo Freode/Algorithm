@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include <string>
 
 using namespace std;
@@ -78,7 +79,7 @@ int main()
 
         // 결과 계산하기
         result = 0;
-        for(int j = 0; j < (int)kind_vec.size(); i++)
+        for(int j = 0; j < (int)kind_vec.size(); j++)
         {
             
         }   
