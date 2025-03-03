@@ -7,6 +7,8 @@
 
 using namespace std;
 
+vector<int> g_points;
+
 struct Line
 {
     int start = 0;
@@ -15,18 +17,14 @@ struct Line
 };
 
 // 부모 노드 찾기
-int find_parent(const vector<int> &in_points, const int num)
+int find_parent(const int num)
 {
-    int parent = num;
+    if(g_points[num] == num) return num;
+
     // 자기 자신이 아닐 때 까지
-    // 0이면 -> 0 => 어차피 루트
     // 설정이 완료됐으면, 1 -> 1
-    while(in_points[parent] != parent)
-    {
-        // 0이 아니라면, 해당 노드로 옮겨서 부모 찾기
-        parent = in_points[parent];
-    }
-    return in_points[parent];
+    g_points[num] = find_parent(g_points[num]);
+    return g_points[num];
 }
 
 int main()
@@ -51,42 +49,33 @@ int main()
         return a.cost < b.cost;
     });
 
-    // 정점
-    vector<int> points(V+1, 0);
+    // 정점 + 자기 자신으로 지정
+    g_points = vector<int>(V+1);
+    for(int i = 0; i < V+1; i++){ g_points[i] = i; }
 
     // 3 -> 1 -> 2
     int result = 0;
+    int line_count = 0;
     for(const Line &line : lines)
     {
         // 출발지와 도착지가 같으면, 무시
         if(line.start == line.end) continue;
 
-        int start_parent = find_parent(points, line.start);
-        int end_parent = find_parent(points, line.end);
+        int start_parent = find_parent(line.start);
+        int end_parent = find_parent(line.end);
 
-        // 둘 다 0일 경우 -> 처음 연결
-        if(start_parent == end_parent && start_parent == 0)
+        // 부모가 다르면, 순환 발생 x -> 연결
+        if(start_parent != end_parent)
         {
-            // start가 항상 더 작음
-            points[line.start] = line.start;
-            points[line.end] = line.start;
+            // 본인의 가장 높은 부모로 연결
+            g_points[end_parent] = start_parent;
             result += line.cost;
-        }
-        // 부모가 다르면, 순환 발생 x
-        else if(start_parent != end_parent)
-        {
-            // 둘 중 부모가 더 작은 쪽으로 이동
-            if(end_parent < start_parent)
-            {
-                points[line.end] = line.start;
-            }
-            else
-            {
-                points[line.start] = line.end;
-            }
-            result += line.cost;
+
+            // 연결 간선 개수가 정점 개수 -1 일 때
+            if(++line_count == V-1) break;
         }
         // 부모가 같으면, 순환 발생 o -> 무시
+
     }
     cout << result << "\n";
 }
