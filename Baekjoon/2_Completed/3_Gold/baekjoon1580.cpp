@@ -70,8 +70,6 @@ bool IsCompleted(const Loc& cur, const Loc& dest)
     return cur.a_y == dest.b_y && cur.a_x == dest.b_x && cur.b_y == dest.a_y && cur.b_x == dest.a_x && (cur.a_y != cur.b_y || cur.a_x != cur.b_x );
 }
 
-
-
 // BFS 시뮬레이션
 void Simulate(const Loc in_loc)
 {
