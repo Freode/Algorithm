@@ -14,7 +14,7 @@ struct BusInfo
     int start = 0;
     int end = 0;
     int cost = 0;
-    BusInfo(){}
+    BusInfo() = default;
     BusInfo(int _start, int _end, int _cost){ start = _start; end = _end; cost = _cost; }
 };
 
@@ -39,7 +39,7 @@ int main()
     cin >> N >> M;
 
     // 버스 정보 입력
-    vector<CityInfo> cities(N);
+    vector<CityInfo> cities(N+1);
     BusInfo tempBus;
     for(int i = 0; i < M; i++)
     {
