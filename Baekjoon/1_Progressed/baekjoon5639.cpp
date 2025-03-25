@@ -4,48 +4,59 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <stack>
 
 using namespace std;
 
 struct Node
 {
-    int num = 0;
     Node* parent = nullptr;
     Node* left = nullptr;
     Node* right = nullptr;
+    int cost = 0;
 
     Node() = default;
-    Node(int num) : num(num) {}
-    Node(Node* parent, int num) : parent(parent), num(num) {}
+    Node(int cost) : cost(cost) {}
 };
 
-Node* g_parent = nullptr;
+Node* g_root = nullptr;
 
-void createNodes()
+// 수 입력
+void inputNode()
 {
-    int num, previous_num;
-    // 유효한 입력이 들어올 때까지
+    int num = 0;
+    stack<Node*> stk;
     while(cin >> num)
     {
-        // 어떤 노드도 없는 경우
-        if(g_parent == nullptr)
+        // 첫 노드 생성
+        if(num == 0)
         {
-            g_parent = new Node(num);
-            previous_num = num;
+            g_root = new Node(num);
+            stk.push(g_root);
             continue;
         }
 
-        // 자식 생성
-        // 왼쪽 자식
-        if(previous_num > num)
+        // 첫 노드 생성이 아닐 때
+
+        // 현재 노드보다 수가 큰 경우
+        Node* previous_top = nullptr;
+        while(stk.empty() == false && stk.top()->cost < num)
         {
+            previous_top = stk.top();
+            stk.pop();
+        }
+
+        // 왼쪽 노드에 추가 가능
+        if(previous_top == nullptr)
+        {
+            Node* new_node = new Node(num);
+            
+            
 
         }
-        // 오른쪽 자식
-        else
-        {
+        // 오른쪽 노드에 추가 가능
 
-        }
+        
     }
 }
 
