@@ -1,4 +1,4 @@
-// 골드 4 - 11404번 : 플로이드
+// 골드 3 - 1865번 : 웜홀
 // 작성자 : free4760(jeonghoe22)
 
 #include <iostream>
@@ -58,10 +58,10 @@ void inputLine(const int N, const int M, const int W)
 // 지점 비용 초기화
 void initCost(const int N)
 {
-    cout << "===\n";
+    //cout << "===\n";
     for(Node& node : g_nodes)
     {
-        cout << node.cost << "\n";
+        //cout << node.cost << "\n";
         node.cost = MAX_VALUE;
     }
 }
@@ -71,14 +71,16 @@ bool simulate(const int start)
 {
     priority_queue<Line> pq;
     pq.push({start, 0});
+    g_nodes[start].cost = 0;
 
+    bool b_break = false;
     while(pq.empty() == false)
     {
         Line move = pq.top();
         pq.pop();
 
         // 비용이 더 저렴한 경우에만 진행
-        if(g_nodes[move.dest].cost <= move.cost) continue;
+        if(g_nodes[move.dest].cost < move.cost) continue;
 
         // 각 선 및 웜홀 이동
         for(const Line& line : g_nodes[move.dest].lines)
@@ -86,14 +88,26 @@ bool simulate(const int start)
             int cost = line.cost + move.cost;
             // 비용이 더 비싼 경우는 무시
             if(cost >= g_nodes[line.dest].cost) continue;
+            
+            // 음수인데, 또 음수인 경우는 무시
+            if(g_nodes[line.dest].cost < 0 && cost < g_nodes[line.dest].cost) continue;
 
             g_nodes[line.dest].cost = cost;
             pq.push({line.dest, cost});
+
+            // 목적지가 시작지이면서, 비용이 음수 -> 시간 여행 가능.
+            if(g_nodes[start].cost < 0)
+            {
+                b_break = true;
+                break;
+            }
         }
+
+        if(b_break) break;
     }
 
     // 음수면, 시간 여행 가능
-    return g_nodes[start].cost < 0;
+    return b_break;
 }
 
 // 시간 여행 지점 탐색
@@ -102,6 +116,7 @@ bool search(const int N)
     // 지점마다 시작한다고 판단
     for(int i = 1; i <= N; i++)
     {
+        //cout << "i : " << i << "\n";
         bool b_state = simulate(i);
 
         // 시간 여행 가능
