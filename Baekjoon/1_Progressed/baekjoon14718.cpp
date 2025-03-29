@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <cmath>
 
 using namespace std;
 
@@ -24,14 +25,23 @@ using namespace std;
 
 // 오름차순된 병사 목록 중에서 능력치 별로 최댓값을 구하기
 
+// 총량이 다르더라도, 편차가 적을수록 좋은 것?
+
 struct Stat
 {
     int str = 0;
     int dex = 0;
     int inte = 0;
     int total = 0;
+    int average = 0;
+    int deviation = 0;
 
-    inline void setTotal(){ total = str + dex + inte; }
+    inline void setTotal()
+    { 
+        total = str + dex + inte;
+        average = total / 3;
+        deviation = abs(str - average) + abs(dex - average) + abs(inte - average);
+    }
 };
 
 vector<Stat> g_enemies;
@@ -50,7 +60,12 @@ void inputEnemy(const int N)
     // 총합 기준 오름차순
     sort(g_enemies.begin(), g_enemies.end(), [](const Stat& a, const Stat& b)
     {
-        return a.total < b.total;
+        // 총합이 다르면, 오름차순
+        if(a.total != b. total)
+            return a.total < b.total;
+
+        // 총합이 같으면, 평균에 가까운 순서(편차가 적은 순서)로 오름차순 정렬
+        return a.deviation < b.deviation;
     });
 }
 
