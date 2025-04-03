@@ -5,8 +5,6 @@
 #include <vector>
 #include <algorithm>
 #include <string>
-#include <utility>
-#include <bitset>
 
 using namespace std;
 
@@ -48,18 +46,19 @@ using namespace std;
 // 근데 계속 or을 누적해야 하는데?
 
 // dp랑 섞어야 하나?
-// 백트래킹? -> 시간 초과
+// 백트래킹?
 
-struct Word
-{
-    int value;
-    int count;
-};
+// 글자의 개수, 글자 값 -> 글자 값이 더 많은 것을 best로 판단?
+// [현재 단어 위치][앞에 단어를 사용한 개수]
 
-vector<Word> g_words;
+// 단어 50개 사용 여부 -> 2^50
+// 글자 26개 사용 여부 -> 2^26 중에서 a,c,i,n,t 5개 사용 -> 2^21
+// 글자 사용 가능한 것을 int로 변환한 뒤, or 연산해서 같으면, 통과시키기
+
+vector<int> g_words;
 
 // 문장을 bit로 변환
-pair<int, int> changeBit(const string& word)
+int changeBit(const string& word)
 {
     // 글자 존재 여부 확인
     vector<bool> letters(26, false);
@@ -70,79 +69,75 @@ pair<int, int> changeBit(const string& word)
 
     // 글자 존재 여부에 따라 비트 계산
     int result = 0;
-    int count = 0;
     for(const bool& letter : letters)
     {
         result = result << 1;
         if(letter) 
-        {
             result++;
-            count++;
-        }
     }
 
-    return {result, count};
+    return result;
 }   
-
-// 숫자를 bit로 변환해서 개수 찾기
-int checkBit(const int base)
-{
-    int count = 0;
-    int num = base;
-
-    // 사용 글자 개수 찾기
-    while(num > 0)
-    {
-        if(num % 2 == 1) count++;
-        num = num >> 1;
-    }
-
-    return count;
-}
 
 // 단어 입력
 void inputWords(const int N)
 {
-    g_words = vector<Word>(N);
+    g_words = vector<int>(N);
 
     string input;
     for(int i = 0; i < N; i++)
     {
         cin >> input;
-        pair<int, int> word = changeBit(input);
-        g_words[i].value = word.first;
-        g_words[i].count = word.second;
+        int word = changeBit(input);
+        g_words[i] = word;
         // cout << g_words[i] << "\n";
         // cout << bitset<26>(g_words[i]) << "\n";
     }
 }
 
-// 해당 단어를 기준으로 몇 단어까지 알 수 있는지 확인
-int search(const Word& base, const int start, const int cnt, const int K)
+
+// 해당 허용 글자를 기준으로 몇 개의 단어가 통과되는지 검사
+int search(const string letters)
 {
-   // 각 단어와 조합
-    int count = cnt;
-    int result = cnt;
-    for(int idx = start; idx < g_words.size(); idx++)
+    int result = 0;
+    // 허용 글자를 숫자로 변환
+    int check = changeBit(letters);
+
+    // 각 단어별로 검사
+    for(const int& word : g_words)
     {
-        // 글자 개수가 K개를 이미 넘으면, 무시
-        if(g_words[idx].count > K) continue;
-
-        int value = base.value | g_words[idx].value;
-        int check = checkBit(value);
-
-        // K개 초과면, 무시
-        if(check > K) continue;
-        
-        // 누적
-        count++;
-        int temp = search({value, check}, idx + 1, count, K);
-        result = max(result, temp);
-        count--;
+        // or 연산해서 같으면, 사용할 수 있는 단어로 통과
+        if(check == (check | word))
+            result++;
     }
- 
+
     return result;
 }
+
+// 허용 글자 정하기
+int makeLetter(const string letters, const int idx, const int cnt, const int& K)
+{
+    // 허용 글자를 모두 정했으면, 탐색
+    if(cnt == K)
+        return search(letters);
+
+    // 허용 글자를 아직 정하는 중
+    int result = 0;
+
+    for(int i = idx; i < 26; i++)
+    {
+        char letter = i + 'a';
+        // 이미 검사한 글자
+        if(letter == 'a' || letter == 'c' || letter == 'i' || letter == 'n' || letter == 't')
+            continue;
+
+        string next = letters + letter;
+        int temp = makeLetter(next, i + 1, cnt + 1, K);
+        result = max(result, temp);
+    }
+    return result;
+}
+
 
 int main()
 {
@@ -159,7 +154,7 @@ int main()
     inputWords(N);
 
     // 시뮬레이션
-    int result = search({0, 0}, 0, 0, K);
+    int result = makeLetter("acint", 0, 5, K);
 
     cout << result << "\n";
 }

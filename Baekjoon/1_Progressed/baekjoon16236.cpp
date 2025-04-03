@@ -34,6 +34,7 @@ struct Loc
     int x;
 };
 
+// 정보 입력
 void input(const int N)
 {
     g_areas = vector<vector<int>>(N, vector<int>(N));
