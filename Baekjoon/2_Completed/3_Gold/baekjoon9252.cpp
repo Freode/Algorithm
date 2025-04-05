@@ -50,14 +50,28 @@ int main()
         }
     }
 
-    // 도착지에서 역추적 - 틀림
-    int j = b.size();
-    for(int i = a.size()-1; i >= 0; i--)
+    // 도착지에서 역추적
+    int j = a.size();
+    int i = b.size();
+    // 기존에 일치하는 경우, 대각선으로 이동
+    while(i > 0 && j > 0)
     {
-        // 경우가 달라질 때, 추가되므로 그 때의 문자 추가
-        if(cases[j][i+1] != cases[j][i])
+        // 1. 왼쪽과 비교
+        if(cases[i][j] == cases[i][j-1])
         {
-            result = a[i] + result;
+            j--;
+        }
+        // 2. 위쪽과 비교
+        else if(cases[i][j] == cases[i-1][j])
+        {
+            i--;
+        }
+        // 3. 왼쪽 위 대각선 검사
+        else
+        {
+            result = a[j-1] + result;
+            i--;
+            j--;
         }
     }
 
