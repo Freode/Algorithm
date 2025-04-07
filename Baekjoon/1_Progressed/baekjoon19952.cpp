@@ -12,6 +12,7 @@ using namespace std;
 // 상하좌우 1칸 이동 -> 힘 1씩 감소
 // 높이가 더 낮으면, 제약 x
 // 높이가 더 높으면, (이동할 곳 높이 - 현재 위치 높이) >= 남아 있는 힘 -> 이동 가능
+// 힘이 0 이하면, 이동 불가능
 
 // 목적지 도착 가능 -> 잘했어!! 출력
 // 목적지 도착 불가능 -> 인성 문제있어?? 출력
@@ -88,6 +89,13 @@ bool simulate(const Loc& start, const Loc& end, const int F)
             int nextY = loc.y + dy[dir];
             int nextX = loc.x + dx[dir];
 
+            // 도착지에 도착했다면, 모두 무시
+            if(isDest({nextY, nextX}, end))
+            {
+                b_dest = true;
+                break;
+            }
+
             // 경계 내부인지 확인
             if(isInBoard({nextY, nextX}) == false)
                 continue;
@@ -97,22 +105,15 @@ bool simulate(const Loc& start, const Loc& end, const int F)
                 continue;
 
             // 높이가 더 높은 장애물인 경우, 힘이 부족할 때면, 무시
-            int necessary = max(0, g_areas[nextY][nextX].height - g_areas[start.y][start.x].height);
             int cost = g_areas[start.y][start.x].cost;
             int remain = F - cost;
+            int necessary = max(0, g_areas[nextY][nextX].height - g_areas[start.y][start.x].height);
             if((necessary <= remain) == false)
                 continue;
 
             // 만약에 남은 힘이 0인 경우, 무시
             if(remain <= 0)
                 continue;
-
-            // 도착지에 도착했다면, 모두 무시
-            if(isDest({nextY, nextX}, end))
-            {
-                b_dest = true;
-                break;
-            }
 
             // 이동
             q.push({nextY, nextX});
