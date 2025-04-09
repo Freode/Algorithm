@@ -91,7 +91,6 @@ void findBest(Info& result, const Info& compare)
 
 void simulate(const int idx, const int top)
 {
-    cout << "idx : " << idx << "\n";
     Info result;
 
     int nextTop = top;
