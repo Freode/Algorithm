@@ -57,10 +57,10 @@ bool allLiquidsEqual()
 {
     bool b_equal = true;
     int base = g_infoes[0].total;
-    cout << base << " ";
+    cout << "base : " << base << "\n";
     for(int idx = 1; idx < g_infoes.size(); idx++)
     {
-        cout << g_infoes[idx].total << " ";
+        cout << "idx : " << idx << ", total : " << g_infoes[idx].total << "\n";
         // 다른 경우는 바로 다르다고 출력
         if(base != g_infoes[idx].total)
         {
@@ -78,14 +78,8 @@ int simulate(const int m)
     int use = 0;
 
     // 용액 사용
-    while(use <= m)
+    while(use < m)
     {   
-        cout << "\nuse : " << use << "\n";
-        // 용액량이 모두 같으면, 반환
-        if(allLiquidsEqual())
-            return use;
-
-
         Liquid liquid = g_pq.top();
         g_pq.pop();
 
@@ -94,11 +88,16 @@ int simulate(const int m)
         g_infoes[liquid.idx].total = liquid.total;
         g_pq.push(liquid);
 
+        cout << "==========\nuse : " << use + 1 << "\n";
+        for(int i = 0; i < g_infoes.size(); i++)
+        {
+            cout << "i : " << i << ", total : " << g_infoes[i].total << "\n";
+        }
+
         use++;
     }
 
-    // 용액이 같은 경우가 없음.
-    return 0;
+    return allLiquidsEqual() ? g_infoes[0].total : 0;
 }
 
 int main()
