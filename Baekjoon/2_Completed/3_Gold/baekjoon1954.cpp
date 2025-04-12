@@ -57,10 +57,8 @@ bool allLiquidsEqual()
 {
     bool b_equal = true;
     int base = g_infoes[0].total;
-    cout << "base : " << base << "\n";
     for(int idx = 1; idx < g_infoes.size(); idx++)
     {
-        cout << "idx : " << idx << ", total : " << g_infoes[idx].total << "\n";
         // 다른 경우는 바로 다르다고 출력
         if(base != g_infoes[idx].total)
         {
@@ -87,12 +85,6 @@ int simulate(const int m)
         liquid.total += g_infoes[liquid.idx].x;
         g_infoes[liquid.idx].total = liquid.total;
         g_pq.push(liquid);
-
-        cout << "==========\nuse : " << use + 1 << "\n";
-        for(int i = 0; i < g_infoes.size(); i++)
-        {
-            cout << "i : " << i << ", total : " << g_infoes[i].total << "\n";
-        }
 
         use++;
     }
