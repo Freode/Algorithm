@@ -25,6 +25,71 @@ using namespace std;
 // 불가능하면, start를 mid로
 // 가능하면, end를 mid로 옮겨서 검사
 
+const int MAX_VALUE = 200'001;
+
+vector<int> g_dates;
+vector<bool> g_visited;
+
+// 정보 입력
+void inputData(const int N)
+{
+    g_dates = vector<int>(N, 0);
+    g_visited = vector<bool>(N, false);
+
+    for(int i = 0; i < N; i++)
+    {
+        cin >> g_dates[i];
+    }
+}
+
+void resetData(const int N)
+{
+    for(int i = 0; i < N; i++)
+    {
+        g_visited[i] = false;
+    }
+}
+
+// 타임머신 시뮬레이션 시작
+bool search(const int N, const int K)
+{
+    resetData(N);
+
+    int date = N-1;
+    g_visited[N-1] = true;
+
+    
+}
+
+int simulate(const int N, const int K)
+{
+    int result = MAX_VALUE;
+
+    int start = 1;
+    int end = N;
+    int mid;
+
+    while(start < end)
+    {
+        mid = (start + end) / 2;
+
+        if(search(mid))
+        {
+            result = min(result, mid);
+            start = mid;
+        }
+        else
+            end = mid;
+        
+    }
+
+
+    if(result == MAX_VALUE)
+        result = 0;
+
+    return result;
+}
+
 int main()
 {
     // 입출력 최적화
