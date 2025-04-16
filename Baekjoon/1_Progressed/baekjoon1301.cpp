@@ -25,6 +25,8 @@ using namespace std;
 // 현재 단계에서 선택 가능한 구슬 선택
 // -> 1번 전과 2번 전이 일치하지 않는 구슬이면서, 남아 있는 개수가 있다면, 선택 가능
 
+// 출력 범위 : long long -> 7개씩 다 넣어보니, int 범위를 벗어남.
+
 using ll = long long;
 
 using vec_1 = vector<ll>;
