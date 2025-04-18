@@ -11,6 +11,15 @@ using namespace std;
 // 높이가 높아지면, 유지
 // 높이가 낮아지면, 반환
 
+// 반례
+// 5
+// 1 1
+// 2 2
+// 3 3
+// 4 4
+// 5 1
+// output : 5
+
 int main()
 {
     // 입출력 최적화
@@ -40,11 +49,21 @@ int main()
             // 높이가 낮아지면, pop 및 새로운 건물의 개수 추가
             else
             {
-                heights.pop();
-                result++;
+                // 높이가 더욱 더 낮아지는 경우는 계속 빼야함.
+                while(cur_height > y)
+                {
+                    heights.pop();
+                    result++;
+                    
+                    // 더 검사해야하는 경우가 존재
+                    if(heights.empty() == false)
+                        cur_height = heights.top();
+                    else
+                        break;
+                }
 
                 // 새로운 높이면, 추가
-                if(y != 0)
+                if(y != 0 && (heights.empty() || (heights.empty() == false && heights.top() != y)))
                 {
                     heights.push(y);
                 }
