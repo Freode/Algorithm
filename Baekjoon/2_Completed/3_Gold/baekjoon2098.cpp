@@ -20,6 +20,8 @@ vector<vector<int>> g_dp;
 
 // 각 성분 최대값 : 1'000'000 => * 20 = 2천만
 
+// 아래 코드 반례 : 해당 도시에서 출발지를 제외하고 이동할 수 없는 경우 -> max값으로 반환되어 오류 발생
+
 // 도시 정보 입력
 void inputInfo(const int N)
 {
@@ -62,9 +64,7 @@ int simulate(const int N, const int num, const int visit, const int cur)
             continue;
 
         // 비용이 더 적은 경로로 탐색
-        //cout << "cur : " << cur << ", i : " << i << "\n";
         ref = min(ref, g_cities[cur][i] + simulate(N, num+1, visit | (1 << i), i));
-        //cout << "cur : " << cur << ", i : " << i << ", ref : " << ref << "\n"; 
     }
 
     return ref == MAX_VALUE ? 1'000'000'000 : ref;
