@@ -9,6 +9,7 @@
 using namespace std;
 
 // 순서대로 N개의 좌표가 주어지므로, 문제 없이 신발끈 공식 사용
+// 마지막에도 첫 점을 추가해야 함.
 
 using ll = long long;
 using ld = long double;
