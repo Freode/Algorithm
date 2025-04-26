@@ -4,6 +4,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <limits>
 
 using namespace std;
 
@@ -14,7 +15,32 @@ using namespace std;
 
 // [행렬 곱 시작 위치][행렬 곱 끝 위치]
 
+// 행렬 연산
+// [start][end] => [1][2]
+// [1].r * [1].c * [2].c
+
+// 1~3
+// (1~1 + 2~3, 1~2 + 3~3) 
+// start.r * end.c * 
+// 앞 -> start.r * start+1.r * end.c
+// 뒤 -> start.r * end-1.c * end.c
+
+// 1~5
+// 1~4 + 5~5
+// 1~3 + 4~5
+// 1~2 + 3~5
+// 1~1 + 2~5
+
+// 3 2
+// 2 5
+// 5 4
+// 4 2
+// 2 6
+
+// dp[start][mid] + dp[mid+1][end], dp[start][])start.r * mid.c * end.c
+
 const int MAX_SIZE = 501;
+const int MAX_VALUE = numeric_limits<int>::max();
 
 struct Matrix
 {
@@ -22,7 +48,7 @@ struct Matrix
     int c = 0;
 };
 
-vector<vector<int>> g_cases(MAX_SIZE, vector<int>(MAX_SIZE, 0));
+vector<vector<int>> g_cases(MAX_SIZE, vector<int>(MAX_SIZE, MAX_VALUE));
 vector<Matrix> g_matrixs;
 
 // 행렬 정보 입력
@@ -38,17 +64,26 @@ void inputMatrix(const int N)
 
 int simulate(const int start, const int end)
 {
+    int& ref = g_cases[start][end];
+
     // 이미 있는 경우, 반환
-    if(g_cases[start][end] != 0)
-        return g_cases[start][end];
+    if(ref != MAX_VALUE)
+        return ref;
+
+    // start와 end가 같은 경우는 0 반환
+    if(start == end)
+        return ref = 0;
 
     // 없는 경우 계산
+    for(int mid = start; mid < end; mid++)
+    {
+        int temp = simulate(start, mid) + simulate(mid + 1, end);
+        temp += (g_matrixs[start].r * g_matrixs[mid].c * g_matrixs[end].c);
 
-    // 1~3 계산
-    // 1~2 + 3~3 계산, 2~3 + 1~1 계산
+        ref = min(ref, temp);
+    }
 
-    // 1~4 계산
-    // 1~3 + 4~4, 2~4 + 1~1
+    return ref;
 }
 
 int main()
