@@ -74,7 +74,7 @@ int simulate(const int start, const int end)
     if(start == end)
         return ref = 0;
 
-    // 없는 경우 계산
+    // 없는 경우의 구간을 모두 계산
     for(int mid = start; mid < end; mid++)
     {
         int temp = simulate(start, mid) + simulate(mid + 1, end);
