@@ -12,6 +12,7 @@ using namespace std;
 
 // 보석 정보 M, V (0~1'000'000)
 // 가방에 담을 수 있는 최대 무게 C (1~100'000'000)
+// 가방에는 하나의 보석만 넣을 수 있음.
 
 // 보석 가격이 높은 순서, 같다면, 무게가 낮은 순서
 // 가방 크기가 여유 있는 순서부터
@@ -23,9 +24,10 @@ struct Bag
     int max_weight = 0;
     int value = 0;
 
+    // 우선순위 큐에 남은 공간이 많은 순서부터 내림차순 정렬
     bool operator<(const Bag& other) const
     {
-        return (max_weight - cur_weight) > 
+        return (max_weight - cur_weight) < (other.max_weight - other.cur_weight); 
     }
 };
 
