@@ -74,18 +74,12 @@ int simulate(const int N, const int D, const int K)
     {
         // 현재부터 - D 시간에서 차를 마셨을 때, 효과를 볼 수 있는 시간의 시작 지점 찾기
         int start = search(idx, D);
-        // 한계치의 시작 지점과 끝 지점을 동시에 구하기
-        //int end = max(search(idx, D-1) - 1, 0);
-        //cout << start << " " << end << "\n";
-        // 
-
-        // g_dp[start][count-1] 보다 g_dp[end][count-1]가 더 수를 많이 포함
 
         // 현실적으로 가능한 잔 수까지 검사
         int times = min(idx, K);
         for(int count = 1; count <= times; count++)
         {
-            // 새롭게 잔을 먹은 경우와 먹지 않는 경우 비교
+            // 새롭게 잔을 먹은 경우와 먹지 않는 경우 비교, 새로운 잔은 현재 위치 바로 직전을 기준으로 추가 쿠키 계산
             g_dp[idx][count] = max(g_dp[idx-1][count], g_dp[start-1][count-1] + (idx - start + 1));
             result = max(result, g_dp[idx][count]);
         }
@@ -106,13 +100,4 @@ int main()
 
     inputInfo(N);
     cout << simulate(N, D, K) << "\n";
-
-    // for(int i = 1; i <= N; i++)
-    // {
-    //     for(int j = 0; j <= K; j++)
-    //     {
-    //         cout << g_dp[i][j] << " ";
-    //     }
-    //     cout << "\n";
-    // }
 }
