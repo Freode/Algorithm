@@ -88,9 +88,6 @@ int main()
         result += (one * (N - 2) * (N - 2) * 5);
         result += (one * (N - 2) * 4);
     }
-    // 12
-    // 8
-    // 128 -> 148
-    // 64 * 5 = 320
+
     cout << result << "\n";
 }
