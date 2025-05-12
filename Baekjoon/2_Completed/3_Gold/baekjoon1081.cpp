@@ -55,7 +55,6 @@ ll simulate(const ll x)
             else
                 result += (i * (base * cur_check));
 
-            //cout << "cur : " << cur_check << ", i : " << i << ", result : " << result << "\n";
         }
 
         div *= 10;
