@@ -31,6 +31,13 @@ struct Num
 };
 
 vector<Num> g_nums;
+map<int, int> g_front;
+map<int, int> g_back;
+
+void combine(const int N, const int idx, const int num)
+{
+    
+}
 
 void inputData(const int N)
 {
