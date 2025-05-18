@@ -29,17 +29,22 @@ using namespace std;
 using ll = long long;
 
 vector<ll> g_sum;
+vector<int> g_each;
 
 void inputData(const int n)
 {
     g_sum = vector<ll>(n, 0);
+    g_each = vector<int>(n, 0);
     ll input;
     for(int i = 0; i < n; i++)
     {
         cin >> input;
 
+        g_each[i] = input;
+        g_sum[i] = input;
+
         if(i != 0)
-            g_sum[i] = g_sum[i-1] + input;
+            g_sum[i] += g_sum[i-1];
     }
 }
 
@@ -50,16 +55,16 @@ void simulate(const int n)
 
     for(int cur_k = 1; cur_k <= (n/2); cur_k++)
     {
-        for(int i = 0; i < n - 2 * cur_k; i++)
+        for(int i = 0; i <= n - 2 * cur_k; i++)
         {
-            for(int j = i + cur_k; j < n - cur_k; j++)
+            for(int j = i + cur_k; j <= n - cur_k; j++)
             {
                 ll cur_diff;
-                if(cur_k == 1)
-                    cur_diff = abs((g_sum[i+cur_k-1] - g_sum[i]) - (g_sum[j+cur_k-1] - g_sum[j]));
+                if(cur_k != 1)
+                    cur_diff = abs((g_sum[i+cur_k-1] - g_sum[i] + g_each[i]) - (g_sum[j+cur_k-1] - g_sum[j] + g_each[j]));
                 
                 else
-                    cur_diff = abs(g_sum[i] - g_sum[j]);
+                    cur_diff = abs(g_each[i] - g_each[j]);
                 
                 if(cur_diff < min_diff)
                 {
@@ -68,6 +73,7 @@ void simulate(const int n)
                 }
                 else if(cur_diff == min_diff)
                     k = cur_k;
+
             }
         }
     }
