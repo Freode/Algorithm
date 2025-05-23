@@ -7,13 +7,13 @@
 
 using namespace std;
 
-int main()
-{
-    // 입출력 최적화
-    ios_base::sync_with_stdio(false);
-    cin.tie(nullptr);
-    cout.tie(nullptr);
+// int main()
+// {
+//     // 입출력 최적화
+//     ios_base::sync_with_stdio(false);
+//     cin.tie(nullptr);
+//     cout.tie(nullptr);
 
 
 
-}
+// }
