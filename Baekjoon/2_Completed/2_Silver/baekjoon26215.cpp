@@ -28,12 +28,14 @@ int simulate(const int N)
 
     while(g_snows[0] != 0)
     {
+        // 두 집의 눈을 치울 수 있는 경우
         if(N != 1 && g_snows[1] != 0)
             g_snows[1]--;
 
         g_snows[0]--;
         result++;
 
+        // 계산 후, 가장 눈이 많이 쌓인 집 순서로 정렬
         sort(g_snows.begin(), g_snows.end(), greater<int>());
 
         // 24시간을 초과한 경우, -1을 출력
