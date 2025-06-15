@@ -65,13 +65,13 @@ void setVisit(const Loc& visit)
 // 특정 방향으로 구슬을 기울려서 보내기
 bool calculateMove(const Loc& start, Loc& next, const int dir)
 {
-    int nextY = isRed ? start.red_y : start.blue_y;
-    int nextX = isRed ? start.red_x : start.blue_x;
+    Loc cur = start;
 
     // 왼쪽으로 굴릴 때, 더 왼쪽에 있는 구슬부터 한 칸씩 옮겨야 함.
 
     // 벽이 아닐 때까지 이동
-    while(g_area[nextY][nextX] != '#')
+    if()
+    while(true)
     {
         // 이동하는 구간에 출구가 있는 경우
         if(g_area[nextY][nextX])
