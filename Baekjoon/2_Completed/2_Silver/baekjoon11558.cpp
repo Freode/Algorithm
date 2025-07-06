@@ -28,7 +28,7 @@ int simulate(const int N)
     {
         // 이미 방문한 경우, 목적지에 도달 불가능
         if(g_targets[num] == -1)
-            return -1;
+            return 0;
 
         int next = g_targets[num];
         g_targets[num] = -1;
