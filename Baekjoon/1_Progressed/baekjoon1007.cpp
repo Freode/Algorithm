@@ -22,17 +22,24 @@ int main()
     cin.tie(nullptr);
     cout.tie(nullptr);
 
-    // 테스트 케이스 T
     int T;
     cin >> T;
-
+    
     for(int i = 0; i < T; i++)
     {
-        // 점의 개수 N
-        int N;
-        cin >> N;
+        int H, W, N;
+        cin >> H >> W >> N;
+        
+        int floor = N % H;
+        int num = N / H + 1;
+        
+        if(floor == 0)
+        {
+            floor = H;
+            num--;
+        }
 
-
+        cout << floor * 100 + num << "\n";
     }
 
 }
