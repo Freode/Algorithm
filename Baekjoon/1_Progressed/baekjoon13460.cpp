@@ -17,6 +17,21 @@ using v4i = vector<v3i>;
 const int dy[] = {1, 0, -1, 0};
 const int dx[] = {0, 1, 0, -1};
 
+enum Dir
+{
+    UP = 0,
+    DOWN,
+    LEFT,
+    RIGHT
+};
+
+enum Result
+{
+    ESCAPE = 0,
+    PASS,
+    VISIT
+};
+
 struct Loc
 {
     int red_y = 0;
@@ -62,40 +77,100 @@ void setVisit(const Loc& visit)
     g_visits[visit.red_y][visit.red_x][visit.blue_y][visit.blue_x] = true;
 }
 
-// 특정 방향으로 구슬을 기울려서 보내기
-bool calculateMove(const Loc& start, Loc& next, const int dir)
+bool isVisit(const Loc& visit)
 {
-    Loc cur = start;
+    return g_visits[visit.red_y][visit.red_x][visit.blue_y][visit.blue_x];
+}
 
-    // 왼쪽으로 굴릴 때, 더 왼쪽에 있는 구슬부터 한 칸씩 옮겨야 함.
+// 누가 더 앞에 있는지
+bool whoIsFront(const int dir, const Loc& loc)
+{
+    bool result = false;
+    switch (dir)
+    {
 
-    // 벽이 아닐 때까지 이동
-    if()
+    case UP:
+        result = loc.red_y > loc.blue_y; 
+        break;
+    
+    case DOWN:
+        result = loc.red_y < loc.blue_y;
+        break;
+
+    case LEFT:
+        result = loc.red_x < loc.blue_x;
+        break;
+
+    case RIGHT:
+        result = loc.red_x > loc.blue_x;
+        break;
+
+    default:
+        break;
+    }
+}
+
+int executeMove(const int dir, const bool isRed, const Loc& start, Loc& next)
+{
+    int nextY = isRed ? start.red_y : start.blue_y;
+    int nextX = isRed ? start.red_x : start.blue_x;
+
     while(true)
     {
-        // 이동하는 구간에 출구가 있는 경우
-        if(g_area[nextY][nextX])
-            return true;
-
         nextY += dy[dir];
         nextX += dx[dir];
+
+        // 1. 벽인지 확인
+        if(g_area[nextY][nextX] == '#')
+        {
+            nextY -= dy[dir];
+            nextX -= dx[dir];
+            break;
+        }
+        // 2. 출구가 있는지 확인
+        if(g_area[nextY][nextX] == 'O')
+            return ESCAPE;
+
+        int redY = isRed ? nextY : start.red_y;
+        int redX = isRed ? nextX : start.red_x;
+        int blueY = isRed ? start.blue_y : nextY;
+        int blueX = isRed ? start.blue_x : nextX;
+
+        // 3. 계속 이동
     }
 
-    // 마지막 칸은 벽이므로 1칸 다시 되돌리기
-    nextY -= dy[dir];
-    nextX -= dx[dir];
+    int redY = isRed ? nextY : start.red_y;
+    int redX = isRed ? nextX : start.red_x;
+    int blueY = isRed ? start.blue_y : nextY;
+    int blueX = isRed ? start.blue_x : nextX;
 
-    // 구슬 색상에 맞춰서 대입
-    if(isRed)
+    // 4. 이미 방문했는지 확인
+    if(g_visits[redY][redX][blueY][blueX] == true)
+            return PASS;
+
+    return VISIT;
+}
+
+// 특정 방향으로 구슬을 기울려서 보내기
+bool calculateMove(const int dir, const Loc& start, Loc& next)
+{
+    // 왼쪽으로 굴릴 때, 더 왼쪽에 있는 구슬부터 한 칸씩 옮겨야 함.
+    bool isRedFront = whoIsFront(dir, start);
+
+    // 구슬 이동
+    int redResult, blueResult;
+    if(isRedFront)
     {
-        next.red_y = nextY;
-        next.red_x = nextX;
+        redResult = executeMove(dir, true, start, next);
     }
     else
     {
-        next.blue_y = nextY;
-        next.blue_x = nextX;
+
     }
+
+    Loc cur = start;
+
+    
 
     return false;
 }
