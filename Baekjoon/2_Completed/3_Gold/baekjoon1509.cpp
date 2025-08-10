@@ -65,7 +65,7 @@ int getResult()
         {
             int start = end - dist;
 
-            // 앞 부분과 합치는 경우가 더 작은지 확인
+            // 앞 부분과 합치는 경우가 더 작은지 확인(단, 해당 부분은 사용하지 않은 경우에서 와야 함.)
             if(g_checks[start][end] == true)
                 g_mins[end][1] = min(g_mins[end][1], g_mins[start][0]);
 
@@ -77,10 +77,6 @@ int getResult()
             }
         }
     }
-
-    // for(const int& each : g_mins)
-    //     cout << each << " ";
-    // cout << "\n";
 
     return min(g_mins[size - 1][0], g_mins[size - 1][1]);
 }
